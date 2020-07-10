@@ -1,0 +1,69 @@
+procedure GenXlsFile(sDataSet:TADOQuery;Fn:String;Vis:Boolean);
+//uses ComObj;
+var
+  ExcelApp: Variant;
+  i,j:integer;
+begin
+  try
+    ExcelApp := CreateOleObject('Excel.Application');
+  except
+    application.MessageBox('系统中的MS Excel软件没有安装或安装不正确！','错误',MB_ICONERROR+MB_OK);
+    exit;
+  end;
+  ExcelApp.visible:=vis;
+  try
+    excelapp.caption:='应用程序调用 Microsoft Excel';
+    ExcelApp.WorkBooks.Add;
+    //写入标题行
+    for i:=1 to sDataSet.Fields.Count do
+    begin
+      ExcelApp.Cells[1,i].Value :=sDataSet.Fields[i-1].DisplayName;
+    end;
+    sDataSet.First;
+    i:=2;
+    while not sDataSet.Eof do
+    begin
+       for j:=0 to sDataSet.Fields.Count-1 do
+       begin
+          ExcelApp.Cells[i,j+1].Value :=sDataSet.Fields[j].AsString;
+       end;
+       sDataSet.Next;
+       i:=i+1;
+    end;
+    sDataSet.First;
+    if application.MessageBox('数据导出完成.确认保存吗？','问题',MB_ICONQUESTION+MB_YESNO+MB_DEFBUTTON1+MB_SYSTEMMODAL)=IDYES then
+    begin
+      if not ExcelApp.ActiveWorkBook.Saved then
+         ExcelApp.ActiveWorkBook.SaveAs(fn);
+    end
+    else begin
+      ExcelApp.ActiveWorkBook.Saved := True; //不保存
+    end;
+  finally
+    excelapp.quit; //退出EXCEL软件
+  end;
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);//调用
+var FN:String;
+begin
+Adoquery1.Close;
+Adoquery1.SQL.Clear;
+Adoquery1.SQL.Text:='Select 姓名, count(姓名) from 城区1 group by 姓名 having count(姓名)>2 order by 姓名';
+Adoquery1.Open;
+Dbgrid1.Columns[0].FieldName:='ID';
+Dbgrid1.Columns[1].FieldName:='家庭成员关系';
+Dbgrid1.Columns[2].FieldName:='姓名';
+Dbgrid1.Columns[3].FieldName:='性别';
+Dbgrid1.Columns[4].FieldName:='户口性质';
+Dbgrid1.Columns[5].FieldName:='户籍地';
+Dbgrid1.Columns[6].FieldName:='身份证号';
+if Messagebox(handle,'是否将“按姓名查询”结果导出到Excel表？','提示',MB_OKCANCEL)=1 then
+begin
+if SaveDialog1.Execute then
+  begin
+    fn:=SaveDialog1.FileName;
+    GenXlsFile(ADOQuery1,fn,False);
+  end;
+end;
+end;

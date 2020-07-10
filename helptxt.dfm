@@ -1,0 +1,42 @@
+object Form16: TForm16
+  Left = 526
+  Top = 192
+  VertScrollBar.ParentColor = False
+  VertScrollBar.Smooth = True
+  VertScrollBar.Style = ssHotTrack
+  VertScrollBar.Tracking = True
+  BorderStyle = bsDialog
+  Caption = #36935#21040#38382#39064#20102#65311
+  ClientHeight = 383
+  ClientWidth = 536
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesigned
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Memo1: TMemo
+    Left = 0
+    Top = 0
+    Width = 537
+    Height = 385
+    Color = clCream
+    Font.Charset = GB2312_CHARSET
+    Font.Color = clPurple
+    Font.Height = -16
+    Font.Name = #31561#32447
+    Font.Style = []
+    Lines.Strings = (
+      'Memo1')
+    ParentFont = False
+    ReadOnly = True
+    ScrollBars = ssVertical
+    TabOrder = 0
+    WantReturns = False
+    WordWrap = False
+  end
+end
